@@ -15,7 +15,14 @@ plugins {
 
 dependencyResolutionManagement {
   repositories {
-    mavenLocal()
+    maven {
+      url = uri('/Users/anton/.m2/repository')
+      metadataSources {
+        gradleMetadata()
+        mavenPom()
+        artifact()
+      }
+    }
     mavenCentral()
     google()
   }
