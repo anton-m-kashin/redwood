@@ -15,9 +15,6 @@
  */
 package app.cash.redwood.protocol.host
 
-import androidx.collection.MutableIntObjectMap
-import androidx.collection.mutableIntObjectMapOf
-import androidx.collection.mutableScatterSetOf
 import app.cash.redwood.Modifier
 import app.cash.redwood.RedwoodCodegenApi
 import app.cash.redwood.leaks.LeakDetector
@@ -57,12 +54,12 @@ public class HostProtocolAdapter<W : Any>(
     is GeneratedHostProtocol -> protocol
   }
 
-  private val nodes =
-    mutableIntObjectMapOf<ProtocolNode<W>>(Id.Root.value, RootProtocolNode(container))
+  private val nodes: MutableMap<Int, ProtocolNode<W>> =
+    mutableMapOf(Id.Root.value to RootProtocolNode(container))
 
   private val removeNodeById = IdVisitor { nodes.remove(it.value) }
 
-  private val changedWidgets = mutableScatterSetOf<ChangeListener>()
+  private val changedWidgets = mutableSetOf<ChangeListener>()
 
   /** Nodes available for reuse. */
   private val pool = ArrayDeque<ProtocolNode<W>>()
@@ -173,7 +170,7 @@ public class HostProtocolAdapter<W : Any>(
   public fun close() {
     closed = true
 
-    nodes.forEachValue { node ->
+    nodes.forEach { (_, node) ->
       node.detach()
     }
     nodes.clear()
@@ -223,7 +220,7 @@ public class HostProtocolAdapter<W : Any>(
     if (pool.isEmpty()) return changes // Short circuit reuse.
 
     // Find nodes that have Modifier.reuse
-    val idToNode = mutableIntObjectMapOf<ReuseNode<W>>()
+    val idToNode = mutableMapOf<Int, ReuseNode<W>>()
     var lastCreatedId = Id.Root
     for (change in changes) {
       if (change is UiCreate) {
@@ -260,19 +257,19 @@ public class HostProtocolAdapter<W : Any>(
     // If the _shape_ of a reuse candidate matches a pooled node, remove the corresponding changes
     // and use the pooled node.
     val changesAndNulls: Array<UiChange?> = changes.toTypedArray()
-    idToNode.forEachValue { reuseNode ->
+    idToNode.forEach { (_, reuseNode) ->
       // Only look for reuse roots.
-      if (reuseNode.changeIndexForAdd != -1) return@forEachValue
+      if (reuseNode.changeIndexForAdd != -1) return@forEach
 
       // Find a pooled node with the same shape hash.
       val shapeHash = shapeHash(protocol, reuseNode)
-      if (shapeHash == 0L) return@forEachValue // Ineligible for pooling.
+      if (shapeHash == 0L) return@forEach // Ineligible for pooling.
       val pooledNodeIndex = pool.indexOfFirst { it.shapeHash == shapeHash }
-      if (pooledNodeIndex == -1) return@forEachValue // No shape match.
+      if (pooledNodeIndex == -1) return@forEach // No shape match.
 
       // Confirm the reuse node has the same shape. (This defends against hash collisions.)
       val pooledNode = pool[pooledNodeIndex]
-      if (!shapesEqual(protocol, reuseNode, pooledNode)) return@forEachValue
+      if (!shapesEqual(protocol, reuseNode, pooledNode)) return@forEach
 
       // Success! Take the pooled node.
       pool.removeAt(pooledNodeIndex)
@@ -291,7 +288,7 @@ public class HostProtocolAdapter<W : Any>(
    * Returns true if new child nodes were found and added.
    */
   private fun putNodesForChildrenOfNodes(
-    idToNode: MutableIntObjectMap<ReuseNode<W>>,
+    idToNode: MutableMap<Int, ReuseNode<W>>,
     uiChanges: List<UiChange>,
   ): Boolean {
     var nodesAddedToMap = false
@@ -317,7 +314,7 @@ public class HostProtocolAdapter<W : Any>(
 
   /** Returns true if any nodes were added to the map. */
   private fun populateCreateIndexAndEligibleForReuse(
-    idToNode: MutableIntObjectMap<ReuseNode<W>>,
+    idToNode: MutableMap<Int, ReuseNode<W>>,
     uiChanges: List<UiChange>,
   ) {
     for ((index, change) in uiChanges.withIndex()) {
@@ -364,7 +361,7 @@ public class HostProtocolAdapter<W : Any>(
      * descendants into the nodes map.
      */
     fun assignPooledNodeRecursive(
-      nodes: MutableIntObjectMap<ProtocolNode<W>>,
+      nodes: MutableMap<Int, ProtocolNode<W>>,
       changesAndNulls: Array<UiChange?>,
       pooled: ProtocolNode<W>,
     ) {

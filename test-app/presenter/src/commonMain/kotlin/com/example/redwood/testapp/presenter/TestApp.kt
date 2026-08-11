@@ -16,7 +16,6 @@
 package com.example.redwood.testapp.presenter
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -43,7 +42,6 @@ private val screens = buildMap<String, @Composable TestContext.() -> Unit> {
   put("Focus") { Focus() }
 }
 
-@Stable
 class TestContext(
   val httpClient: HttpClient,
 )

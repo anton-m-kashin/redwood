@@ -65,6 +65,9 @@ kotlin {
         implementation libs.androidx.collection
       }
     }
+    wasmWasiMain {
+      dependsOn(nonJsMain)
+    }
   }
 }
 

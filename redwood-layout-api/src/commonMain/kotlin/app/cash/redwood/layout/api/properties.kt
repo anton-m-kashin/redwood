@@ -17,12 +17,11 @@
 
 package app.cash.redwood.layout.api
 
-import androidx.compose.runtime.Immutable
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
 
 /** Controls how the container should determine its width/height. */
-@[Immutable JvmInline Serializable]
+@[ JvmInline Serializable]
 public value class Constraint private constructor(private val ordinal: Int) {
 
   override fun toString(): String = when (ordinal) {
@@ -38,7 +37,7 @@ public value class Constraint private constructor(private val ordinal: Int) {
 }
 
 /** Equivalent to `justify-content`. */
-@[Immutable JvmInline Serializable]
+@[ JvmInline Serializable]
 public value class MainAxisAlignment private constructor(private val ordinal: Int) {
 
   override fun toString(): String = when (ordinal) {
@@ -62,7 +61,7 @@ public value class MainAxisAlignment private constructor(private val ordinal: In
 }
 
 /** Equivalent to `align-items`. */
-@[Immutable JvmInline Serializable]
+@[ JvmInline Serializable]
 public value class CrossAxisAlignment private constructor(private val ordinal: Int) {
 
   override fun toString(): String = when (ordinal) {
@@ -82,7 +81,7 @@ public value class CrossAxisAlignment private constructor(private val ordinal: I
 }
 
 /** Equivalent to `overflow-x`/`overflow-y`. */
-@[Immutable JvmInline Serializable]
+@[ JvmInline Serializable]
 public value class Overflow private constructor(private val ordinal: Int) {
 
   override fun toString(): String = when (ordinal) {

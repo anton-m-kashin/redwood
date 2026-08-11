@@ -14,7 +14,13 @@ kotlin {
     commonMain {
       dependencies {
         implementation libs.androidx.compose.runtime
+        implementation "composelive.androidx.compose.runtime:runtime-annotation:1.12.0-dev01"
         implementation libs.kotlinx.serialization.core
+      }
+    }
+    wasmWasiMain {
+      dependencies {
+        implementation 'org.jetbrains.compose.runtime:runtime-wasm-wasi:1.12.0-dev01'
       }
     }
     commonTest {
@@ -26,13 +32,6 @@ kotlin {
   }
 }
 
-dependencies {
-  constraints {
-    commonMainApi("org.jetbrains.compose.runtime:runtime:1.9.0") {
-      because('AndroidX publishes multiplatform version. The JetBrains artifact is now empty.')
-    }
-  }
-}
 
 android {
   namespace = 'app.cash.redwood.runtime'

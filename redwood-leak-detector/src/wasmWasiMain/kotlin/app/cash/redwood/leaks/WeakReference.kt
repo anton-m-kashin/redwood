@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Square, Inc.
+ * Copyright (C) 2024 Square, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package app.cash.redwood.lazylayout.api
+package app.cash.redwood.leaks
 
-import dev.drewhamilton.poko.Poko
-import kotlinx.serialization.Serializable
+internal actual fun hasWeakReference(): Boolean = false
 
-/**
- * @param id Should only be used to trigger recompositions.
- */
-@[ Serializable]
-@Poko
-public class ScrollItemIndex(
-  public val id: Int,
-  public val index: Int,
-  /** True to smoothly scroll to the new position. */
-  public val animated: Boolean = false,
-)
+internal actual class WeakReference<T : Any> actual constructor(private val referred: T) {
+  actual fun get(): T? = referred
+}

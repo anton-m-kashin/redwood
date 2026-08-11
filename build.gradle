@@ -20,6 +20,33 @@ buildscript {
 
 apply plugin: 'org.jetbrains.dokka'
 
+allprojects {
+  configurations.configureEach { configuration ->
+    configuration.resolutionStrategy.dependencySubstitution {
+      // Use composelive-hosted fork roots that support wasmWasi while redirecting
+      // all other platform variants back to the upstream AndroidX artifacts.
+      substitute module('androidx.compose.runtime:runtime') using module('composelive.androidx.compose.runtime:runtime:1.12.0-dev01')
+      substitute module('androidx.compose.runtime:runtime-annotation') using module('composelive.androidx.compose.runtime:runtime-annotation:1.12.0-dev01')
+      substitute module('androidx.compose.runtime:runtime-saveable') using module('composelive.androidx.compose.runtime:runtime-saveable:1.12.0-dev01')
+      substitute module('androidx.collection:collection') using module('composelive.androidx.collection:collection:1.12.0-dev01')
+      substitute module('androidx.annotation:annotation') using module('composelive.androidx.annotation:annotation:1.12.0-dev01')
+      // Also redirect JetBrains' empty platform roots to the composelive roots.
+      substitute module('org.jetbrains.compose.runtime:runtime') using module('composelive.androidx.compose.runtime:runtime:1.12.0-dev01')
+      substitute module('org.jetbrains.compose.runtime:runtime-annotation') using module('composelive.androidx.compose.runtime:runtime-annotation:1.12.0-dev01')
+      substitute module('org.jetbrains.compose.runtime:runtime-saveable') using module('composelive.androidx.compose.runtime:runtime-saveable:1.12.0-dev01')
+      substitute module('org.jetbrains.androidx.collection:collection') using module('composelive.androidx.collection:collection:1.12.0-dev01')
+      substitute module('org.jetbrains.androidx.annotation:annotation') using module('composelive.androidx.annotation:annotation:1.12.0-dev01')
+    }
+
+    // Ensure the Compose runtime klib is present on every wasm-wasi compilation classpath.
+    // (The substituted multiplatform roots do not always get their platform artifact pulled in.)
+    def cfgName = configuration.name
+    if (cfgName.contains('wasmWasi') && cfgName.contains('Compile')) {
+      configuration.dependencies.add(project.dependencies.create('org.jetbrains.compose.runtime:runtime-wasm-wasi:1.12.0-dev01'))
+    }
+  }
+}
+
 afterEvaluate {
   spotless {
     kotlin {

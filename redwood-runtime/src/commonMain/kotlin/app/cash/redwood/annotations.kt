@@ -15,13 +15,11 @@
  */
 package app.cash.redwood
 
-import androidx.compose.runtime.StableMarker
 
 /**
  * Marks a layout scope as part of a DSL.
  */
 @DslMarker
-@StableMarker
 public annotation class LayoutScopeMarker
 
 /**

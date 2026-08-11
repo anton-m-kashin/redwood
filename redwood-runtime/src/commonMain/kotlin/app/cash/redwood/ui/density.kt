@@ -15,7 +15,6 @@
  */
 package app.cash.redwood.ui
 
-import androidx.compose.runtime.Immutable
 import kotlin.jvm.JvmInline
 import kotlin.math.roundToInt
 import kotlinx.serialization.Serializable
@@ -26,7 +25,7 @@ import kotlinx.serialization.Serializable
  * @param rawDensity The raw, platform-specific density which hasn't been
  *  normalized with respect to other platforms.
  */
-@[Immutable JvmInline Serializable]
+@[ JvmInline Serializable]
 public value class Density(
   public val rawDensity: Double,
 ) {

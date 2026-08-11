@@ -75,7 +75,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 private const val REDWOOD_GROUP_ID = "io.github.tret9"
 
 // HEY! If you change the major version update release.yaml doc folder.
-private const val REDWOOD_VERSION = "0.20.0-composelive-0.15"
+private const val REDWOOD_VERSION = "0.20.0-composelive-0.16-wasm-SNAPSHOT"
 
 private val isCiEnvironment = System.getenv("CI") == "true"
 
@@ -320,6 +320,7 @@ private class RedwoodBuildExtensionImpl(private val project: Project) : RedwoodB
             modifiedGroup[JsTests, NodeJs].applyTo(this)
           }
           jvm()
+          wasmWasi()
         }
         // Needed for lint in downstream Android projects to analyze this dependency.
         project.plugins.apply("com.android.lint")
@@ -335,6 +336,7 @@ private class RedwoodBuildExtensionImpl(private val project: Project) : RedwoodB
             modifiedGroup[JsTests, NodeJs].applyTo(this)
           }
           jvm()
+          wasmWasi()
         }
       }
       Tooling -> {

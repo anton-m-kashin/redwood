@@ -15,8 +15,6 @@
  */
 package app.cash.redwood.ui
 
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
 
@@ -24,7 +22,7 @@ import kotlinx.serialization.Serializable
  * Represents a density-independent pixel value. Values will be scaled and
  * converted into standard pixel values according to the device's density.
  */
-@[Immutable JvmInline Serializable]
+@[ JvmInline Serializable]
 public value class Dp(
   public val value: Double,
 ) {
@@ -41,15 +39,12 @@ public value class Dp(
 }
 
 /** Create a [Dp] from an [Int]. */
-@Stable
 public inline val Int.dp: Dp get() = Dp(toDouble())
 
 /** Create a [Dp] from a [Float]. */
-@Stable
 public inline val Float.dp: Dp get() = Dp(toDouble())
 
 /** Create a [Dp] from a [Double]. */
-@Stable
 public inline val Double.dp: Dp get() = Dp(toDouble())
 
 /**

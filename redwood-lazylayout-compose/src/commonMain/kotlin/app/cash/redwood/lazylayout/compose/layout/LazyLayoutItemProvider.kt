@@ -16,7 +16,6 @@
 package app.cash.redwood.lazylayout.compose.layout
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 
 // Copied from https://github.com/androidx/androidx/blob/a733905d282ecdba574bc5e35d6b0ebf83c82dcd/compose/foundation/foundation/src/commonMain/kotlin/androidx/compose/foundation/lazy/layout/LazyLayoutItemProvider.kt
 // Removed support for content types.
@@ -25,7 +24,6 @@ import androidx.compose.runtime.Stable
  * Provides all the needed info about the items which could be later composed and displayed as
  * children or [LazyLayout].
  */
-@Stable
 internal interface LazyLayoutItemProvider {
 
   /**

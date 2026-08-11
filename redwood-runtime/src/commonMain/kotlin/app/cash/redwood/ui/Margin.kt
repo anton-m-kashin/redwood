@@ -15,12 +15,10 @@
  */
 package app.cash.redwood.ui
 
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
 import dev.drewhamilton.poko.Poko
 import kotlinx.serialization.Serializable
 
-@[Immutable Serializable]
+@[ Serializable]
 @Poko
 public class Margin(
   public val start: Dp = 0.dp,
@@ -46,13 +44,11 @@ public class Margin(
   }
 }
 
-@Stable
 public fun Margin(
   horizontal: Dp = 0.dp,
   vertical: Dp = 0.dp,
 ): Margin = Margin(horizontal, horizontal, vertical, vertical)
 
-@Stable
 public fun Margin(
   all: Dp = 0.dp,
 ): Margin = Margin(all, all, all, all)
