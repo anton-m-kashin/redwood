@@ -19,7 +19,7 @@ kotlin {
         implementation projects.redwoodWidgetComposeui
         implementation projects.redwoodYoga
         implementation libs.jetbrains.compose.foundation
-        implementation "composelive.androidx.compose.runtime:runtime-annotation:1.12.0-dev01"
+        implementation "androidx.compose.runtime:runtime-annotation:1.12.0-dev01"
       }
     }
 
