@@ -32,7 +32,7 @@ kotlin {
         api projects.redwoodWidget
         api libs.androidx.compose.runtime
         api libs.jetbrains.compose.runtime.saveable
-        api "org.jetbrains.compose.runtime:runtime-annotation:1.12.0-dev01"
+        api "composelive.androidx.compose.runtime:runtime-annotation:1.12.0-dev01"
       }
     }
     commonTest {

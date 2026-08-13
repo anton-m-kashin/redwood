@@ -15,13 +15,14 @@
  */
 package app.cash.redwood.lazylayout.api
 
+import androidx.compose.runtime.Immutable
 import dev.drewhamilton.poko.Poko
 import kotlinx.serialization.Serializable
 
 /**
  * @param id Should only be used to trigger recompositions.
  */
-@[ Serializable]
+@[Immutable Serializable]
 @Poko
 public class ScrollItemIndex(
   public val id: Int,

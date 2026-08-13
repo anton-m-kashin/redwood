@@ -16,11 +16,13 @@
 
 package app.cash.redwood
 
+import androidx.compose.runtime.Stable
 import kotlin.native.ObjCName
 
 /**
  * An ordered, immutable collection of elements that change how a widget is laid out.
  */
+@Stable
 @ObjCName("Modifier", exact = true)
 public interface Modifier {
   /**

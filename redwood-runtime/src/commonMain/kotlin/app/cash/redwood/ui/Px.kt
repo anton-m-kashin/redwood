@@ -15,13 +15,14 @@
  */
 package app.cash.redwood.ui
 
+import androidx.compose.runtime.Immutable
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
 
 /**
  * Represents a raw pixel value in the host's native coordinate system units.
  */
-@[ JvmInline Serializable]
+@[Immutable JvmInline Serializable]
 public value class Px(
   public val value: Double,
 ) {

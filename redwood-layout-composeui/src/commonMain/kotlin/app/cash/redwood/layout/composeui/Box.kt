@@ -16,6 +16,7 @@
 package app.cash.redwood.layout.composeui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,10 +58,12 @@ internal inline fun Box(
 }
 
 /** Wrapper class to ensure argument stability when passed to a Compose function. */
+@Immutable
 internal data class BoxChildrenLayoutInfo(
   val infos: List<BoxChildLayoutInfo>,
 )
 
+@Immutable
 internal data class BoxChildLayoutInfo(
   val alignment: Alignment,
   val matchParentWidth: Boolean,
