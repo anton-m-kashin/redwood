@@ -18,9 +18,8 @@ kotlin {
       }
     }
     wasmWasiMain {
-      dependencies {
-        implementation 'org.jetbrains.compose.runtime:runtime-wasm-wasi:1.12.0-dev01'
-      }
+      // Inherits the commonMain Compose runtime dependency, which resolves to the
+      // KMP root module that provides the wasmWasi platform klib.
     }
     commonTest {
       dependencies {

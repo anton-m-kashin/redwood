@@ -27,31 +27,30 @@ allprojects {
 
     configuration.resolutionStrategy.dependencySubstitution {
       if (isWasmWasi) {
-        // Wasm-Wasi configurations resolve the fork's platform artifacts directly.
-        substitute module('androidx.compose.runtime:runtime') using module('org.jetbrains.compose.runtime:runtime-wasm-wasi:1.12.0-dev01')
-        substitute module('org.jetbrains.compose.runtime:runtime') using module('org.jetbrains.compose.runtime:runtime-wasm-wasi:1.12.0-dev01')
-        substitute module('composelive.androidx.compose.runtime:runtime') using module('org.jetbrains.compose.runtime:runtime-wasm-wasi:1.12.0-dev01')
+        // Wasm-Wasi configurations still resolve the KMP root modules so that common
+        // source-set visibility inference sees the same module in every platform
+        // compilation. The root .module files contain a wasmWasiApiElements-published
+        // variant that delivers the physical fork klib.
+        substitute module('androidx.compose.runtime:runtime') using module('composelive.androidx.compose.runtime:runtime:1.12.0-dev01')
+        substitute module('org.jetbrains.compose.runtime:runtime') using module('composelive.androidx.compose.runtime:runtime:1.12.0-dev01')
 
-        substitute module('androidx.compose.runtime:runtime-annotation') using module('org.jetbrains.compose.runtime:runtime-annotation-wasm-wasi:1.12.0-dev01')
-        substitute module('org.jetbrains.compose.runtime:runtime-annotation') using module('org.jetbrains.compose.runtime:runtime-annotation-wasm-wasi:1.12.0-dev01')
-        substitute module('composelive.androidx.compose.runtime:runtime-annotation') using module('org.jetbrains.compose.runtime:runtime-annotation-wasm-wasi:1.12.0-dev01')
+        substitute module('androidx.compose.runtime:runtime-annotation') using module('composelive.androidx.compose.runtime:runtime-annotation:1.12.0-dev01')
+        substitute module('org.jetbrains.compose.runtime:runtime-annotation') using module('composelive.androidx.compose.runtime:runtime-annotation:1.12.0-dev01')
 
-        substitute module('androidx.compose.runtime:runtime-saveable') using module('org.jetbrains.compose.runtime:runtime-saveable-wasm-wasi:1.12.0-dev01')
-        substitute module('org.jetbrains.compose.runtime:runtime-saveable') using module('org.jetbrains.compose.runtime:runtime-saveable-wasm-wasi:1.12.0-dev01')
-        substitute module('composelive.androidx.compose.runtime:runtime-saveable') using module('org.jetbrains.compose.runtime:runtime-saveable-wasm-wasi:1.12.0-dev01')
+        substitute module('androidx.compose.runtime:runtime-saveable') using module('composelive.androidx.compose.runtime:runtime-saveable:1.12.0-dev01')
+        substitute module('org.jetbrains.compose.runtime:runtime-saveable') using module('composelive.androidx.compose.runtime:runtime-saveable:1.12.0-dev01')
 
-        substitute module('androidx.collection:collection') using module('org.jetbrains.androidx.collection:collection-wasm-wasi:1.12.0-dev01')
-        substitute module('org.jetbrains.androidx.collection:collection') using module('org.jetbrains.androidx.collection:collection-wasm-wasi:1.12.0-dev01')
-        substitute module('composelive.androidx.collection:collection') using module('org.jetbrains.androidx.collection:collection-wasm-wasi:1.12.0-dev01')
+        substitute module('androidx.collection:collection') using module('composelive.androidx.collection:collection:1.12.0-dev01')
+        substitute module('org.jetbrains.androidx.collection:collection') using module('composelive.androidx.collection:collection:1.12.0-dev01')
 
-        substitute module('androidx.annotation:annotation') using module('org.jetbrains.androidx.annotation:annotation-wasm-wasi:1.12.0-dev01')
-        substitute module('org.jetbrains.androidx.annotation:annotation') using module('org.jetbrains.androidx.annotation:annotation-wasm-wasi:1.12.0-dev01')
-        substitute module('composelive.androidx.annotation:annotation') using module('org.jetbrains.androidx.annotation:annotation-wasm-wasi:1.12.0-dev01')
+        substitute module('androidx.annotation:annotation') using module('composelive.androidx.annotation:annotation:1.12.0-dev01')
+        substitute module('org.jetbrains.androidx.annotation:annotation') using module('composelive.androidx.annotation:annotation:1.12.0-dev01')
       } else {
         // All other configurations resolve the composelive KMP root modules, which
-        // carry wasm-wasi metadata while redirecting non-wasm platforms back to
-        // the upstream AndroidX artifacts. This makes common metadata compilation
-        // in modules that depend on Compose runtime succeed.
+        // carry real androidx.compose.runtime common metadata while redirecting
+        // non-wasm platforms back to the upstream AndroidX artifacts and pointing
+        // wasm-wasi to the fork leaf. This makes common metadata compilation in
+        // modules that depend on Compose runtime succeed.
         substitute module('androidx.compose.runtime:runtime') using module('composelive.androidx.compose.runtime:runtime:1.12.0-dev01')
         substitute module('org.jetbrains.compose.runtime:runtime') using module('composelive.androidx.compose.runtime:runtime:1.12.0-dev01')
 
@@ -69,10 +68,6 @@ allprojects {
       }
     }
 
-    // Ensure the Compose runtime klib is present on every wasm-wasi compilation classpath.
-    if (isWasmWasi && cfgName.contains('Compile')) {
-      configuration.dependencies.add(project.dependencies.create('org.jetbrains.compose.runtime:runtime-wasm-wasi:1.12.0-dev01'))
-    }
   }
 }
 
