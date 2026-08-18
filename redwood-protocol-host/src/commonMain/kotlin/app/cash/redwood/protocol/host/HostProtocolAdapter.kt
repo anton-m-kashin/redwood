@@ -29,6 +29,7 @@ import app.cash.redwood.protocol.WidgetTag
 import app.cash.redwood.widget.ChangeListener
 import app.cash.redwood.widget.Widget
 import app.cash.redwood.widget.WidgetSystem
+import androidx.collection.MutableIntObjectMap
 import kotlin.native.ObjCName
 
 /**
@@ -54,8 +55,10 @@ public class HostProtocolAdapter<W : Any>(
     is GeneratedHostProtocol -> protocol
   }
 
-  private val nodes: MutableMap<Int, ProtocolNode<W>> =
-    mutableMapOf(Id.Root.value to RootProtocolNode(container))
+  private val nodes: MutableIntObjectMap<ProtocolNode<W>> =
+    MutableIntObjectMap<ProtocolNode<W>>().apply {
+      put(Id.Root.value, RootProtocolNode(container))
+    }
 
   private val removeNodeById = IdVisitor { nodes.remove(it.value) }
 
@@ -170,7 +173,7 @@ public class HostProtocolAdapter<W : Any>(
   public fun close() {
     closed = true
 
-    nodes.forEach { (_, node) ->
+    nodes.forEach { _, node ->
       node.detach()
     }
     nodes.clear()
@@ -361,7 +364,7 @@ public class HostProtocolAdapter<W : Any>(
      * descendants into the nodes map.
      */
     fun assignPooledNodeRecursive(
-      nodes: MutableMap<Int, ProtocolNode<W>>,
+      nodes: MutableIntObjectMap<ProtocolNode<W>>,
       changesAndNulls: Array<UiChange?>,
       pooled: ProtocolNode<W>,
     ) {
